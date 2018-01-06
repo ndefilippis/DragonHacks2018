@@ -7,8 +7,8 @@ app.get('/', (res, req) => {
   res.send('DragonHacks2018 App goes here.')
 })
 
-app.post('/groceries', (res, req) => {
-  let list = parseImage.parseImage(req.image)
+app.post('/', (res, req) => {
+  
   console.log(list)
 })
 
