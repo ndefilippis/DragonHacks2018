@@ -7,18 +7,30 @@
 		var items = {
 			list: []
 		};
+
+		let rowCount = 0;
 		function add() {
 		        var table = document.getElementById("table");
 		        var row = table.insertRow(1);
-		        var cell1 = row.insertCell(0);
+		        var productNameCell = row.insertCell(0);
+						var buttonCell = row.insertCell(1);
 		        var val = document.getElementById("product").value;
-		        cell1.innerHTML = val;
-		        items.list.push(val);
+						items.list.push(val);
+						row.id = 'row-' + rowCount;
+						rowCount++;
+		        productNameCell.innerHTML = val;
+						let removeButton = document.createElement('button')
+						removeButton.innerHTML = 'Remove'
+						buttonCell.style.textAlign = 'right'
+						removeButton.onclick = function () {
+							remove(row.id)
+						}
+						buttonCell.append(removeButton)
 		}
-		function remove() {
-		        var table = document.getElementById("table");
-		        var row = table.deleteRow(1);
-		        items.list.pop();
+
+		function remove(id) {
+		        var row = document.getElementById(id)
+						row.outerHTML = ""
 		}
 
 		function submit() {
@@ -58,10 +70,9 @@
 		<input type="text" id="number">
 		<h3>List</h3>
 		<button type="button" onClick="add()">Add</button>
-		<button type="button" onClick="remove()">Remove</button>
 		<table id="table">
 			<tr>
-				<td>
+				<td colspan="2">
 					<input type="text" id="product">
 				</td>
 			</tr>

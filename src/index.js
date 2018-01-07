@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
-app.post('/', (res, req) => {
+app.post('/', async function(res, req) {
   const phone = req.req.body.phone;
   const list = req.req.body.list;
   console.log(phone, list);
@@ -29,33 +29,47 @@ app.post('/', (res, req) => {
   var messageToSend = "";
   var links = {};
   // detect and classify items using opencv and return list
-  getImageFromCamera(async function(detectionList) {
-    console.log(detectionList)
-    var missingItems = {};
-    for(key in list) {
-      if(!detectionList.includes(list[key])) { // less items than needed
-        console.log(list[key])
-        // search for items on Amazon
-        missingItems[list[key]] = list[key];
-        let foundItem = await searchForItems.search(list[key]);
-        links[list[key]] = foundItem;
-      }
-    }
-    if(!isEmpty(links)) {
-      console.log(links)
-      messageToSend = "You have less items than you need: \n";
-      for(key in missingItems) {
-        messageToSend += `${key}\n`;
-      }
-      messageToSend += "And here is some help from us: \n";
-      for(key in links) {
-        messageToSend += `${key}: ${links[key]}\n`;
-      }
-      // notify.send(phone, messageToSend);
-    }
-  })
-})
+  var numPics = 5;
+  var picTimeout = 3000;
+  var detectedItems = new Set()
+  for(let i = 1; i < numPics + 1; i++) {
+    let f = function (num) {
+      setTimeout(async function() {
+        let detectionList = await getImageFromCamera('./out-'+num+'.jpg')
+        for (key in detectionList) {
+          detectedItems.add(detectionList[key])
+        }
+        if(num == numPics) {
+          console.log(detectedItems)
+          var missingItems = {};
 
+          for(key in list) {
+            if(!detectedItems.has(list[key])) { // less items than needed
+              console.log(list[key])
+              // search for items on Amazon
+              missingItems[list[key]] = list[key];
+              let foundItem = await searchForItems.search(list[key]);
+              links[list[key]] = foundItem;
+            }
+          }
+
+          if(!isEmpty(links)) {
+            console.log(links)
+            messageToSend = "You have less items than you need: \n";
+            for(key in missingItems) {
+              messageToSend += `${key}\n`;
+            }
+            messageToSend += "And here is some help from us: \n";
+            for(key in links) {
+              messageToSend += `${key}: ${links[key]}\n`;
+            }
+            // notify.send(phone, messageToSend);
+          }
+        }
+      }, picTimeout * num)
+    }(i)
+  }
+})
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
