@@ -8,7 +8,13 @@ const app = new Clarifai.App({
 
 const FOOD_MODEL = 'bd367be194cf45149e75f01d59f77ba7'
 
-async function getLabels (imageURL) {
+function filterList (list) {
+  list.map((item) => {
+    return {name: item.name, confidence: item.confidence}
+  })
+}
+
+function getLabels (imageURL, callback) {
   // predict the contents of an image by passing in a url
   fs.readFile(imageURL, function(err, original_data) {
     if(err){
@@ -18,7 +24,7 @@ async function getLabels (imageURL) {
       var base64Data = original_data.toString('base64')
       app.models.predict(FOOD_MODEL, base64Data).then(
           function(response) {
-            console.log(response.outputs[0].data)
+            callback(filterList(response.outputs[0].data))
           },
           function(err) {
     	     console.error(err);
@@ -29,4 +35,4 @@ async function getLabels (imageURL) {
 
 }
 
-getLabels('./water2.jpg')
+module.exports = {getLabels}
