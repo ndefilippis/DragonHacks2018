@@ -5,25 +5,21 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	<script>
 		var items = {
-			list: {
-
-			}
+			list: []
 		};
 		function add() {
 			var table = document.getElementById("table");
 	    var row = table.insertRow(1);
 	    var cell1 = row.insertCell(0);
-	    var cell2 = row.insertCell(1);
-	    cell1.innerHTML = document.getElementById("product").value;
-	    cell2.innerHTML = document.getElementById("quantity").value;
-			items.list[cell1.innerHTML] = cell2.innerHTML;
+	    var val = document.getElementById("product").value;
+			cell1.innerHTML = val;
+			items.list.push(val);
 		}
 		function submit() {
 			items.phone = document.getElementById("number").value;
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', 'http://localhost:3000/');
 			xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			console.log(items);
 			xhr.send(JSON.stringify(items));
 		}
 	</script>
@@ -60,9 +56,6 @@
 			<tr>
 				<td>
 					<input type="text" id="product">
-				</td>
-				<td>
-					<input type="text" id="quantity">
 				</td>
 			</tr>
 		</table>

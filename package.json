@@ -17,12 +17,10 @@
   },
   "homepage": "https://github.com/ndefilippis/DragonHacks2018#readme",
   "dependencies": {
-<<<<<<< HEAD
+    "amazon-product-api": "^0.4.4",
     "base64-img": "^1.0.3",
-    "clarifai": "^2.5.0",
-=======
     "body-parser": "^1.18.2",
->>>>>>> backend v2
+    "clarifai": "^2.5.0",
     "express": "^4.16.2",
     "opencv": "^6.0.0",
     "twilio": "^3.11.0"

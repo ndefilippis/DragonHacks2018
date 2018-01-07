@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const notify = require('./notify');
 const searchForItems = require('./searchForItems');
+const getImageFromCamera = require('./opencv').getImageFromCamera;
 
 let app = express();
 
@@ -25,35 +26,42 @@ app.post('/', (res, req) => {
       "bottle": 2
     }
   */
-  const time = 5000;
   var messageToSend = "";
-  var links = [];
-  setInterval(function() {
-    // detect and classify items using opencv and return list
-    var detectionList = {};
+  var links = {};
+  // detect and classify items using opencv and return list
+  getImageFromCamera(async function(detectionList) {
+    console.log(detectionList)
     var missingItems = {};
     for(key in list) {
-      if(detectionList.hasOwnProperty(key) && detectionList[key] < list[key]) { // less items than needed
+      if(!detectionList.includes(list[key])) { // less items than needed
+        console.log(list[key])
         // search for items on Amazon
-        missingItems[key] = detectionList[key];
-        let foundItem = searchForItems.search(key);
-        links.push({
-          key: foundItem
-        });
+        missingItems[list[key]] = list[key];
+        let foundItem = await searchForItems.search(list[key]);
+        links[list[key]] = foundItem;
       }
     }
-    if(listToSend.length !== 0) {
+    if(!isEmpty(links)) {
+      console.log(links)
       messageToSend = "You have less items than you need: \n";
       for(key in missingItems) {
-        messageToSend += `${key}: ${missingItems[key]}\n`;
+        messageToSend += `${key}\n`;
       }
       messageToSend += "And here is some help from us: \n";
       for(key in links) {
-        messageToSend += `${key}: ${links[key]}`;
+        messageToSend += `${key}: ${links[key]}\n`;
       }
-      notify.send(phone, messageToSend);
+      // notify.send(phone, messageToSend);
     }
-  }, time);
+  })
 })
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 app.listen(3000, () => console.log('App listening on port 3000'))

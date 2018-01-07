@@ -7,6 +7,7 @@ const sender = "+13123218099";
 var client = new twilio(accountSid, authToken);
 
 function send(receiver, message) {
+  console.log(message + '  ' + receiver)
   client.messages.create({
       to: receiver,
       from: sender,

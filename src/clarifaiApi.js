@@ -1,4 +1,3 @@
-
 const Clarifai = require('clarifai');
 const fs = require('fs')
 
@@ -8,8 +7,9 @@ const app = new Clarifai.App({
 
 const FOOD_MODEL = 'bd367be194cf45149e75f01d59f77ba7'
 
-function filterList (list) {
-  return list.map(item => item.name)
+function filterList (list, neededConfidence) {
+  console.log(list)
+  return list.filter(item => item.value > neededConfidence).map(item => item.name)
 }
 
 function getLabels (imageURL, callback) {
@@ -17,13 +17,13 @@ function getLabels (imageURL, callback) {
   fs.readFile(imageURL, function(err, original_data) {
     if(err){
       console.log(err)
-      return
+      return null
     }
     else {
       var base64Data = original_data.toString('base64')
       app.models.predict(FOOD_MODEL, base64Data).then(
           function(response) {
-            callback(filterList(response.outputs[0].data.concepts))
+            callback(filterList(response.outputs[0].data.concepts, 0.85))
           },
           function(err) {
     	     console.error(err);

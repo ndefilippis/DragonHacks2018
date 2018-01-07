@@ -6,21 +6,16 @@ var client = amazon.createClient({
   awsTag: "dragonhack201-20"
 });
 
-function search(item) {
-  client.itemSearch({
+async function search(item) {
+  let results = await client.itemSearch({
     keywords: item,
     searchIndex: 'Grocery'
-  }, function(err, results, response) {
-    if (err) {
-      console.log(err);
-    } else {
-      var list = [];
-      results.map(function(item) {
-        list.push(item.DetailPageURL[0]);
-      });
-      return list.slice(0, 3);
-    }
+  })
+  var list = [];
+  results.map(function(item) {
+    list.push(item.DetailPageURL[0]);
   });
+  return list.slice(0, 3);
 }
 
 module.exports = { search };
