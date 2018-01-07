@@ -1,0 +1,64 @@
+<html>
+<head>
+	<title>Grocery List</title>
+	<script>
+	function Add(){
+	var table = document.getElementById("table1");
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = document.getElementById("product").value;
+    cell2.innerHTML = document.getElementById("quantity").value;
+	}
+	</script>
+	<style>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	table {
+		display: inline;
+	}
+	#main{
+		margin-left: 35%;
+		margin-top: 10%;
+		padding: 10px;
+		display: flex;
+		align-items: left;
+		justify-content: center;
+		flex-direction: column;
+		color: white;
+		font-family: 'Open Sans', sans-serif;
+	}
+	button {
+		align-items: center;
+		justify-content: center;
+		display: flex;
+	}
+	td {
+		padding: 0;
+		margin: 0;
+		color: white;
+	}
+	</style>
+</head>
+<body background="http://s1.picswalls.com/wallpapers/2014/08/11/beautiful-garden-wallpaper_090701774_195.jpg">
+<div id="main">
+	<font size="10">Grocery List</font>
+	<br>
+	<label>Phone Number:</label> <input type="text" id= "number">
+	<br>
+	<br>
+	<label>List</label>
+	<br>
+	<button type="button" onClick="Add()">Add</button>
+	<br>
+	<table id="table1">
+	<tr>
+	<td><input type="text" id="product"></td>
+	<td><input type="text" id="quantity"></td>
+	</table>
+	<br>
+	<br>
+	<button type="button">Submit</button>
+	<!-- idk how to do any of this LOL -->
+</div>
+</body>
+</html>
