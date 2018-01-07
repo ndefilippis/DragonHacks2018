@@ -7,7 +7,7 @@ function getImageFromCamera () {
       if (err) throw err
       console.log(im.size())
       if (im.size()[0] > 0 && im.size()[1] > 0) {
-        im.save('./water2.jpg')
+        im.save('./out.jpg')
         camera.release()
       }
     })
@@ -17,26 +17,6 @@ function getImageFromCamera () {
   }
 }
 
-function identifyObjects (img) {
-  cv.readImage(img, function (err, im) {
-    if (err) {
-      console.log(err)
-    }
-    im.detectObject('./res/banana_classifier.xml', {}, function (err, bananas) {
-      if (err) {
-        console.log(err)
-      }
-      for (var i = 0; i < bananas.length; i++) {
-        var x = bananas[i]
-        console.log(x)
-        im.rectangle([x.x, x.y], [x.width, x.height])
-      }
-      im.save('./out.jpg')
-      console.log(bananas.length)
-    })
-  })
-}
-
 getImageFromCamera()
 
-module.exports = {identifyObjects, getImageFromCamera}
+module.exports = {getImageFromCamera}
