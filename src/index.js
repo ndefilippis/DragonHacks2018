@@ -1,14 +1,15 @@
 const express = require('express')
-const parseImage = require('parseImage')
+const opencv = require('./opencv')
 
 let app = express()
 
 app.get('/', (res, req) => {
-  res.send('DragonHacks2018 App goes here.')
+  opencv.getImageFromCamera()
+  //res.send('DragonHacks2018 App goes here.')
 })
 
 app.post('/', (res, req) => {
-  
+
   console.log(list)
 })
 

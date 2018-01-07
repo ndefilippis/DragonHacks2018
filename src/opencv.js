@@ -1,5 +1,22 @@
 const cv = require('opencv')
 
+function getImageFromCamera () {
+  try {
+    var camera = new cv.VideoCapture(0)
+    camera.read(function (err, im) {
+      if (err) throw err
+      console.log(im.size())
+      if (im.size()[0] > 0 && im.size()[1] > 0) {
+        im.save('./water2.jpg')
+        camera.release()
+      }
+    })
+  } catch (e) {
+    console.log("Couldn't start camera:", e)
+    camera.release()
+  }
+}
+
 function identifyObjects (img) {
   cv.readImage(img, function (err, im) {
     if (err) {
@@ -20,6 +37,6 @@ function identifyObjects (img) {
   })
 }
 
-identifyObjects('./res/face-and-banana.jpg')
+getImageFromCamera()
 
-module.exports = {identifyObjects}
+module.exports = {identifyObjects, getImageFromCamera}
