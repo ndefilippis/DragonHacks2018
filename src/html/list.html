@@ -8,13 +8,19 @@
 			list: []
 		};
 		function add() {
-			var table = document.getElementById("table");
-	    var row = table.insertRow(1);
-	    var cell1 = row.insertCell(0);
-	    var val = document.getElementById("product").value;
-			cell1.innerHTML = val;
-			items.list.push(val);
+		        var table = document.getElementById("table");
+		        var row = table.insertRow(1);
+		        var cell1 = row.insertCell(0);
+		        var val = document.getElementById("product").value;
+		        cell1.innerHTML = val;
+		        items.list.push(val);
 		}
+		function remove() {
+		        var table = document.getElementById("table");
+		        var row = table.deleteRow(1);
+		        items.list.pop();
+		}
+
 		function submit() {
 			items.phone = document.getElementById("number").value;
 			var xhr = new XMLHttpRequest();
@@ -52,6 +58,7 @@
 		<input type="text" id="number">
 		<h3>List</h3>
 		<button type="button" onClick="add()">Add</button>
+		<button type="button" onClick="remove()">Remove</button>
 		<table id="table">
 			<tr>
 				<td>
