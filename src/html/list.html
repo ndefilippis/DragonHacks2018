@@ -30,7 +30,9 @@
 
 		function remove(id) {
 		        var row = document.getElementById(id)
+						let name = row.childNodes[0].innerHTML
 						row.outerHTML = ""
+						items.list.splice(items.list.indexOf(name), 1)
 		}
 
 		function submit() {

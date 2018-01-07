@@ -18,7 +18,7 @@ async function getLabels (imageURL, callback) {
   let original_data = await asyncReadFile(imageURL)
   var base64Data = original_data.toString('base64')
   let response = await app.models.predict(FOOD_MODEL, base64Data)
-  return filterList(response.outputs[0].data.concepts, 0.85)
+  return filterList(response.outputs[0].data.concepts, 0.5)
 }
 
 module.exports = {getLabels}

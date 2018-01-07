@@ -49,7 +49,7 @@ app.post('/', async function(res, req) {
           }
 
           if(!isEmpty(links)) {
-            messageToSend = "You have less items than you need: \n";
+            messageToSend = "You are low on the following items: \n";
             for(key in missingItems) {
               messageToSend += `${key}\n`;
             }
@@ -63,6 +63,9 @@ app.post('/', async function(res, req) {
             }
             // notify.send(phone, messageToSend);
             console.log(messageToSend);
+          }
+          else {
+            console.log('Fridge is fully stocked')
           }
         }
       }, picTimeout * num)
