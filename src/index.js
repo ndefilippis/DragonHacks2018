@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const tinyurl = require('tinyurl');
+const promisify = require('util').promisify;
 const notify = require('./notify');
 const searchForItems = require('./searchForItems');
 const getImageFromCamera = require('./opencv').getImageFromCamera;
@@ -18,24 +20,17 @@ app.post('/', async function(res, req) {
   const phone = req.req.body.phone;
   const list = req.req.body.list;
   console.log(phone, list);
-  /*
-  LIST MODEL
-    {
-      "apple": 3,
-      "orange": 5,
-      "bottle": 2
-    }
-  */
+
   var messageToSend = "";
   var links = {};
   // detect and classify items using opencv and return list
-  var numPics = 5;
-  var picTimeout = 3000;
-  var detectedItems = new Set()
+  var numPics = 3;
+  var picTimeout = 2000;
+  var detectedItems = new Set();
   for(let i = 1; i < numPics + 1; i++) {
     let f = function (num) {
       setTimeout(async function() {
-        let detectionList = await getImageFromCamera('./out-'+num+'.jpg')
+        let detectionList = await getImageFromCamera(`./out-${num}.jpg`);
         for (key in detectionList) {
           detectedItems.add(detectionList[key])
         }
@@ -54,28 +49,43 @@ app.post('/', async function(res, req) {
           }
 
           if(!isEmpty(links)) {
-            console.log(links)
             messageToSend = "You have less items than you need: \n";
             for(key in missingItems) {
               messageToSend += `${key}\n`;
             }
             messageToSend += "And here is some help from us: \n";
+            console.log(links)
             for(key in links) {
-              messageToSend += `${key}: ${links[key]}\n`;
+                for (let i = 0; i < links[key].length; i++){
+                  shortened = await shorten(links[key][i]);
+                  messageToSend += `${key}: ${shortened}\n`;
+                }
             }
             // notify.send(phone, messageToSend);
+            console.log(messageToSend);
           }
         }
       }, picTimeout * num)
     }(i)
   }
 })
+
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
             return false;
     }
     return true;
+}
+
+async function shorten(url) {
+  let p = new Promise((resolve, reject) => {
+    tinyurl.shorten(url, function(res) {
+      resolve(res)
+    })
+  })
+  let res = await p
+  return res
 }
 
 app.listen(3000, () => console.log('App listening on port 3000'))
