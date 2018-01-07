@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/ndefilippis/DragonHacks2018#readme",
   "dependencies": {
+<<<<<<< HEAD
     "base64-img": "^1.0.3",
     "clarifai": "^2.5.0",
+=======
+    "body-parser": "^1.18.2",
+>>>>>>> backend v2
     "express": "^4.16.2",
     "opencv": "^6.0.0",
     "twilio": "^3.11.0"

@@ -1,12 +1,22 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const notify = require('./notify');
 const searchForItems = require('./searchForItems');
 
 let app = express();
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.use(bodyParser.json());
+
 app.post('/', (res, req) => {
-  const phone = req.body.phone;
-  const list = req.body.list;
+  const phone = req.req.body.phone;
+  const list = req.req.body.list;
+  console.log(phone, list);
   /*
   LIST MODEL
     {

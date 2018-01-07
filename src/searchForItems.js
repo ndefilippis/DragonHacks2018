@@ -8,7 +8,7 @@ var client = amazon.createClient({
 
 function search(item) {
   client.itemSearch({
-    keywords: 'banana',
+    keywords: item,
     searchIndex: 'Grocery'
   }, function(err, results, response) {
     if (err) {
